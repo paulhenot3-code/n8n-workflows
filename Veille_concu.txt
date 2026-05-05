@@ -1,0 +1,1500 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "id": "251e6a01-9c71-482c-bd1b-2fa5f68c7374",
+      "name": "Weekly Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1008,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "4eb7bd43-ce70-456b-941e-e1ce7f90e350",
+      "name": "Loop par concurrent",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -528,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const brand = $input.first().json;\nconst get = (obj, key) => obj?.[key] || '';\nreturn [{\n  json: {\n    brand_name: get(brand.fields, 'Brand') || get(brand, 'Brand') || 'Unknown',\n    website_url: get(brand.fields, 'Site Web') || get(brand, 'Site Web'),\n    rss_url: get(brand.fields, 'RSS URL') || get(brand, 'RSS URL'),\n    instagram_handle: get(brand.fields, 'Instagram') || get(brand, 'Instagram'),\n    facebook_handle: get(brand.fields, 'Facebook') || get(brand, 'Facebook'),\n    tiktok_handle: get(brand.fields, 'Tiktok') || get(brand, 'Tiktok'),\n    youtube_handle: get(brand.fields, 'YouTube') || get(brand, 'YouTube'),\n    x_handle: get(brand.fields, 'X') || get(brand, 'X'),\n    airtable_brand_id: brand.id || '',\n    scan_date: new Date().toISOString().split('T')[0],\n    scan_week: `S${Math.ceil((new Date().getDate()) / 7)}-${new Date().getMonth() + 1}-${new Date().getFullYear()}`\n  }\n}];"
+      },
+      "id": "0036c9eb-0e4a-4b7a-852c-79f7a4b3a4be",
+      "name": "Prepare concurrent data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        496
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "e158f1fb-2c2c-4928-be44-a915e795092f",
+      "name": "Parallel branches",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        496
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Prepare concurrent data').item.json.rss_url }}",
+        "options": {}
+      },
+      "id": "31dad431-ae36-4bd7-8fd4-2e7f39099c0a",
+      "name": "RSS Feed Read",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        304,
+        192
+      ],
+      "continueOnFail": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "rss-check",
+              "leftValue": "={{ $('Prepare concurrent data').item.json.rss_url }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c7d61b6b-cbbe-46eb-b4f9-a6142be87fd1",
+      "name": "RSS exists?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        144,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst oneWeekAgo = new Date();\noneWeekAgo.setDate(oneWeekAgo.getDate() - 7);\nconst brandName = $('Prepare concurrent data').item.json.brand_name;\nreturn items\n  .filter(item => {\n    const date = new Date(item.json.isoDate || item.json.pubDate);\n    return !isNaN(date.getTime()) && date >= oneWeekAgo;\n  })\n  .map(item => ({\n    json: {\n      source: 'rss',\n      brand: brandName,\n      title: item.json.title || '',\n      description: (item.json.contentSnippet || item.json.description || '').substring(0, 500),\n      url: item.json.link || '',\n      date: item.json.isoDate || item.json.pubDate,\n      raw_content: (item.json.content || item.json['content:encoded'] || '').substring(0, 2000)\n    }\n  }));"
+      },
+      "id": "04e5df78-7fea-4225-b67b-9c95a3100a43",
+      "name": "Filter RSS 7 days",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const handle = $('Prepare concurrent data').item.json.instagram_handle;\nconst brandName = $('Prepare concurrent data').item.json.brand_name;\nif (!handle) {\n  return [{ json: { source: 'instagram', brand: brandName, posts: [], message: 'No Instagram handle configured' } }];\n}\nreturn [{ json: { handle, brand: brandName, source: 'instagram' } }];"
+      },
+      "id": "5627a9bf-ac42-47cd-91da-c8737b1191be",
+      "name": "Prepare Instagram",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst brandName = $('Prepare concurrent data').item.json.brand_name;\nconst results = [];\nfor (const item of items) {\n  const post = item.json;\n  if (!post || post.error) continue;\n  const caption = post.caption || '';\n  const title = caption.split('\\n')[0].substring(0, 120);\n  const description = caption.substring(0, 300);\n  const hashtags = (caption.match(/#[a-zA-Z0-9_]+/g) || []).join(', ');\n  const likes = post.likesCount || 0;\n  const comments = post.commentsCount || 0;\n  const engagement = likes + comments;\n  results.push({\n    json: {\n      source: 'instagram', brand: brandName,\n      title, description,\n      url: post.url || '',\n      date: post.timestamp || new Date().toISOString(),\n      likes, comments, engagement, score: engagement,\n      hashtags, type: post.type || 'post', shortCode: post.shortCode || ''\n    }\n  });\n}\nif (results.length === 0) {\n  return [{ json: { source: 'instagram', brand: brandName, title: 'No recent posts', description: '', url: '', date: '', likes: 0, comments: 0, engagement: 0, score: 0, hashtags: '', category: '', type: '' } }];\n}\nresults.sort((a, b) => b.json.score - a.json.score);\nreturn results.slice(0, 3);"
+      },
+      "id": "c6a2ba3e-9266-4670-94db-8bcc9277820b",
+      "name": "Format Instagram",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const handle = $('Prepare concurrent data').item.json.facebook_handle;\nconst brandName = $('Prepare concurrent data').item.json.brand_name;\nif (!handle) {\n  return [{ json: { source: 'facebook', brand: brandName, posts: [], message: 'No Facebook handle configured' } }];\n}\nreturn [{ json: { handle, brand: brandName, source: 'facebook' } }];"
+      },
+      "id": "5c773465-e8d1-4b64-be9a-74d79d0695dd",
+      "name": "Prepare Facebook",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst brandName = $('Prepare concurrent data').item.json.brand_name;\nconst results = [];\nfor (const item of items) {\n  const post = item.json;\n  results.push({\n    json: {\n      source: 'facebook', brand: brandName,\n      title: (post.text || post.message || '').substring(0, 200),\n      description: post.text || post.message || '',\n      url: post.url || post.postUrl || '',\n      date: post.time || post.timestamp || '',\n      likes: post.likes || post.reactionsCount || 0,\n      comments: post.comments || post.commentsCount || 0,\n      shares: post.shares || post.sharesCount || 0,\n      engagement: (post.likes || post.reactionsCount || 0) + (post.comments || post.commentsCount || 0) + (post.shares || post.sharesCount || 0),\n      type: post.type || 'post'\n    }\n  });\n}\nif (results.length === 0) {\n  return [{ json: { source: 'facebook', brand: brandName, title: 'No recent posts', description: '', url: '', date: '', likes: 0, comments: 0, shares: 0, engagement: 0, type: '' } }];\n}\nreturn results;"
+      },
+      "id": "3cef02b8-2021-4add-9f57-05efa8541b58",
+      "name": "Format Facebook",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const handle = $('Prepare concurrent data').item.json.tiktok_handle;\nconst brandName = $('Prepare concurrent data').item.json.brand_name;\nif (!handle) {\n  return [{ json: { source: 'tiktok', brand: brandName, posts: [], message: 'No TikTok handle configured' } }];\n}\nreturn [{ json: { handle, brand: brandName, source: 'tiktok' } }];"
+      },
+      "id": "914c6d82-1951-42c1-8fbc-ad99c420e721",
+      "name": "Prepare TikTok",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        656
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst brandName = $('Prepare concurrent data').first().json.brand_name;\nconst results = [];\nfor (const item of items) {\n  const post = item.json;\n  const likes = post.diggCount || post.likes || 0;\n  const comments = post.commentCount || post.comments || 0;\n  const shares = post.shareCount || post.shares || 0;\n  const views = post.playCount || post.plays || 0;\n  results.push({\n    json: {\n      source: 'tiktok', brand: brandName,\n      title: (post.text || post.desc || '').substring(0, 200),\n      description: post.text || post.desc || '',\n      url: post.webVideoUrl || '',\n      date: post.createTimeISO || post.createTime || '',\n      likes, comments, shares, views,\n      engagement: likes + comments + shares,\n      hashtags: (post.hashtags || []).map(h => h.name || h).join(', '),\n      type: 'video'\n    }\n  });\n}\nif (results.length === 0) {\n  return [{ json: { source: 'tiktok', brand: brandName, title: 'No recent posts', description: '', url: '', date: '', likes: 0, comments: 0, shares: 0, views: 0, engagement: 0, hashtags: '', type: '' } }];\n}\nreturn results;"
+      },
+      "id": "75e0cd81-f08b-440d-bb6d-d5213f136d19",
+      "name": "Format TikTok",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        656
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Newsletters",
+          "mode": "name"
+        },
+        "filterByFormula": "={Brand} = '{{ $('Prepare concurrent data').item.json.brand_name }}'",
+        "options": {}
+      },
+      "id": "6b9ae293-a18d-4800-93e1-05fe2f475c5e",
+      "name": "GET Newsletters Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        320,
+        48
+      ],
+      "continueOnFail": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst brandName = $('Prepare concurrent data').item.json.brand_name;\nconst oneWeekAgo = new Date();\noneWeekAgo.setDate(oneWeekAgo.getDate() - 7);\nconst results = [];\nfor (const item of items) {\n  const nl = item.json;\n  const nlDate = new Date(nl.Date || '');\n  if (nlDate >= oneWeekAgo) {\n    results.push({\n      json: {\n        source: 'newsletter', brand: brandName,\n        title: nl.Subject || '',\n        description: [nl['Nouveaux produits'] !== 'Aucun' ? `Produits: ${nl['Nouveaux produits']}` : '', nl.Campagnes !== 'Aucun' ? `Campagnes: ${nl.Campagnes}` : '', nl.Promotions !== 'Aucun' ? `Promos: ${nl.Promotions}` : ''].filter(x => x).join(' | '),\n        url: '', date: nl.Date || '',\n        nouveaux_produits: nl['Nouveaux produits'] || 'Aucun',\n        campagnes: nl.Campagnes || 'Aucun',\n        promotions: nl.Promotions || 'Aucun'\n      }\n    });\n  }\n}\nif (results.length === 0) {\n  return [{ json: { source: 'newsletter', brand: brandName, title: 'No newsletter this week', description: '', url: '', date: '' } }];\n}\nreturn results;"
+      },
+      "id": "76e79b8e-23c8-4ffd-9039-bda2d83d42a5",
+      "name": "Format Newsletters",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst brandName = $('Prepare concurrent data').item.json.brand_name;\nconst results = [];\nfor (const item of items) {\n  const vid = item.json;\n  results.push({\n    json: {\n      source: 'youtube', brand: brandName,\n      title: vid.title || '',\n      description: (vid.description || '').substring(0, 500),\n      url: vid.url || '', date: vid.date || vid.uploadDate || '',\n      views: vid.viewCount || vid.views || 0,\n      likes: vid.likes || 0, comments: vid.commentsCount || 0,\n      engagement: (vid.likes || 0) + (vid.commentsCount || 0),\n      type: 'video'\n    }\n  });\n}\nif (results.length === 0) {\n  return [{ json: { source: 'youtube', brand: brandName, title: 'No recent video', description: '', url: '', date: '', views: 0, likes: 0, comments: 0, engagement: 0, type: '' } }];\n}\nreturn results;"
+      },
+      "id": "714cdd09-3221-4d62-a1db-4360a701080b",
+      "name": "Format YouTube",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "numberInputs": 7
+      },
+      "id": "7065dc57-b5d2-4cb5-b79b-0f354391b7f8",
+      "name": "Merge all sources",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1072,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const MAX_ITEMS = 20;\nconst VIEW_WEIGHT = 0.05;\nconst allItems = $input.all();\nconst brandName = $('Prepare concurrent data').item.json.brand_name;\n\nfunction computeScore(item) {\n  return Math.round((item.engagement || 0) + (item.views || 0) * VIEW_WEIGHT);\n}\n\nconst seen = new Set();\nlet cleanItems = [];\nfor (const i of allItems) {\n  const item = i.json;\n  if (!item.title || item.title.includes('Aucun') || item.title.includes('No recent')) continue;\n  const key = item.title.trim().toLowerCase();\n  if (seen.has(key)) continue;\n  seen.add(key);\n  const normalized = { source: item.source || 'unknown', title: item.title, date: item.date || null, engagement: item.engagement || 0, views: item.views || 0 };\n  normalized.score = computeScore(normalized);\n  cleanItems.push(normalized);\n}\n\ncleanItems.sort((a, b) => b.score - a.score);\nconst topItems = cleanItems.slice(0, MAX_ITEMS);\n\nconst bySource = {};\nfor (const item of topItems) {\n  if (!bySource[item.source]) bySource[item.source] = [];\n  bySource[item.source].push(item);\n}\n\nlet text = `\\n=== COMPETITOR: ${brandName} ===\\n`;\nfor (const [source, items] of Object.entries(bySource)) {\n  text += `\\n--- Source: ${source.toUpperCase()} ---\\n`;\n  for (const item of items) {\n    text += `• [${item.source}] [SCORE: ${item.score}] [ENG: ${item.engagement}] [VIEWS: ${item.views}]\\n  ${item.title}${item.date ? ` (${item.date})` : ''}\\n`;\n  }\n}\n\ntext += `\\n=== TOP SIGNALS ===\\n`;\ntopItems.slice(0, 5).forEach((item, i) => { text += `#${i + 1} ${item.title} (score: ${item.score})\\n`; });\n\nreturn [{ json: { brand: brandName, consolidated_text: text, sources_count: Object.keys(bySource).length, total_items: allItems.length, filtered_items: topItems.length, scan_date: new Date().toISOString().split('T')[0] } }];"
+      },
+      "id": "564d62bd-dbcf-459b-b395-23f375444187",
+      "name": "Aggregate competitor data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\nconst brandName = $('Prepare concurrent data').item.json.brand_name;\nlet analysis = {};\ntry {\n  const rawText = response.content?.[0]?.text || response.text || JSON.stringify(response);\n  const clean = rawText.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  analysis = JSON.parse(clean);\n} catch (e) {\n  analysis = { brand: brandName, error: `Parsing failed: ${e.message}` };\n}\nreturn [{ json: { brand: brandName, analysis, scan_date: new Date().toISOString().split('T')[0] } }];"
+      },
+      "id": "2a24eac4-5db2-44bc-a311-f45b5501fcf1",
+      "name": "Parse Claude analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1840,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "id": "06b981dc-4890-4b4e-962c-458a4d010fc2",
+      "name": "Wait (rate limit)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2256,
+        528
+      ],
+      "webhookId": "YOUR_WAIT_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-20250514",
+          "mode": "list",
+          "cachedResultName": "claude-sonnet-4-20250514"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a senior marketing analyst specializing in natural, organic, and ayurvedic cosmetics. You work for YOUR_BRAND_NAME.\n\nYour mission: analyze competitive intelligence data collected automatically (Instagram, Facebook, TikTok, YouTube, newsletters, RSS) and extract actionable strategic insights.\n\nRules:\n- Respond ONLY in valid JSON, no markdown, no backticks, no text before or after\n- Be concise but precise: cite exact product names, campaigns, influencers\n- Distinguish facts (observed data) from interpretations (your analysis)\n- Engagement score = likes + comments + shares. Views separate.\n- Prioritize strong signals (high score) in your analysis\n\nExpected JSON structure:\n{\n  \"brand\": \"Exact competitor name\",\n  \"periode\": \"Week of DD/MM/YYYY\",\n  \"nouveaux_produits\": \"Detected products with exact names, or None\",\n  \"campagnes_marketing\": \"Identified campaigns with channel and description, or None\",\n  \"promotions\": \"Offers and promo codes detected, or None\",\n  \"strategie_contenu\": \"Positioning, tone, preferred formats, storytelling\",\n  \"tendances_detectees\": \"Recurring topics, pushed themes\",\n  \"engagement_notable\": \"Top 3 content by score with numbers\",\n  \"partenariats\": \"Influencers, collabs, co-creations detected, or None\",\n  \"canaux_actifs\": \"List of channels with activity level\",\n  \"opportunites_brand\": \"2-3 concrete opportunities for YOUR_BRAND_NAME based on this analysis\",\n  \"resume_global\": \"3-4 sentence summary of competitor activity this week\"\n}\n\nData to analyze:\n{{ $json.consolidated_text }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 4096
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        1504,
+        528
+      ],
+      "id": "91ac1a8f-bee6-44e3-95a8-22139e1ce881",
+      "name": "LLM Analysis 1",
+      "credentials": {
+        "anthropicApi": {
+          "id": "YOUR_ANTHROPIC_CREDENTIAL_ID",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "actorId": {
+          "__rl": true,
+          "value": "YOUR_APIFY_ACTOR_YOUTUBE_ID",
+          "mode": "id"
+        },
+        "customBody": "={\n    \"maxResults\": 10,\n    \"searchQueries\": [\"{{ $json.youtube_handle }}\"]\n}",
+        "timeout": {},
+        "authentication": "apifyOAuth2Api"
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        304,
+        800
+      ],
+      "id": "defd01d5-4394-4f3b-9472-d115abee156f",
+      "name": "Run YouTube Actor",
+      "credentials": {
+        "apifyOAuth2Api": {
+          "id": "YOUR_APIFY_CREDENTIAL_ID",
+          "name": "Apify OAuth"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "Datasets",
+        "datasetId": "={{ $json.defaultDatasetId }}",
+        "offset": {}
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        480,
+        800
+      ],
+      "id": "54eea754-f3f7-4e0d-a297-153c6a2ff3f9",
+      "name": "Get YouTube dataset",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "actorId": {
+          "__rl": true,
+          "value": "YOUR_APIFY_ACTOR_TIKTOK_ID",
+          "mode": "id"
+        },
+        "customBody": "={\n  \"profiles\": [\"{{ $json.handle }}\"],\n  \"resultsPerPage\": 10,\n  \"shouldDownloadVideos\": false\n}",
+        "timeout": {}
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        304,
+        656
+      ],
+      "id": "0ca04425-c741-4cd5-aeed-31ca383a036f",
+      "name": "Run TikTok Actor",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "Datasets",
+        "datasetId": "={{ $json.defaultDatasetId }}",
+        "offset": {}
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        480,
+        656
+      ],
+      "id": "c8e51ea3-aa75-42d3-ae35-880819ba2f08",
+      "name": "Get TikTok dataset",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "actorId": {
+          "__rl": true,
+          "value": "YOUR_APIFY_ACTOR_FACEBOOK_ID",
+          "mode": "id"
+        },
+        "customBody": "={\n    \"resultsLimit\": 10,\n    \"startUrls\": [{\"url\": \"{{ $json.handle }}\"}]\n}",
+        "timeout": {}
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        304,
+        512
+      ],
+      "id": "e2711353-2509-4dec-ac5f-31b9428b2b80",
+      "name": "Run Facebook Actor",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "Datasets",
+        "datasetId": "={{ $json.defaultDatasetId }}",
+        "offset": {}
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        480,
+        512
+      ],
+      "id": "12e084ae-33f0-44b0-a638-9eac07078a15",
+      "name": "Get Facebook dataset",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "actorId": {
+          "__rl": true,
+          "value": "YOUR_APIFY_ACTOR_INSTAGRAM_ID",
+          "mode": "id"
+        },
+        "customBody": "={\n  \"username\": [\"{{ $input.first().json.handle }}\"],\n  \"resultsLimit\": 10,\n  \"dataDetailLevel\": \"basicData\",\n  \"skipPinnedPosts\": true\n}",
+        "timeout": {},
+        "authentication": "apifyOAuth2Api"
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        304,
+        352
+      ],
+      "id": "94f26d42-8b01-4d67-ba9a-ba9f46cb4f02",
+      "name": "Run Instagram Actor",
+      "credentials": {
+        "apifyOAuth2Api": {
+          "id": "YOUR_APIFY_CREDENTIAL_ID",
+          "name": "Apify OAuth"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "Datasets",
+        "datasetId": "={{ $json.defaultDatasetId }}",
+        "offset": {}
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        480,
+        352
+      ],
+      "id": "257f29de-6552-4f29-9e56-773e7213f1e6",
+      "name": "Get Instagram dataset",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d3f999b7-4a1a-4481-ac7b-63507bf2723b",
+              "leftValue": "={{ new Date($json.isoDate) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        480,
+        192
+      ],
+      "id": "b15e7d14-c0ac-4d51-b2db-30b795622e7e",
+      "name": "Recent article?"
+    },
+    {
+      "parameters": {
+        "jsCode": "const ytHandle = $('Prepare concurrent data').item.json.youtube_handle;\nconst xHandle = $('Prepare concurrent data').item.json.x_handle;\nconst brandName = $('Prepare concurrent data').item.json.brand_name;\nreturn [{ json: { youtube_handle: ytHandle || '', x_handle: xHandle || '', brand: brandName, source: 'video_x' } }];"
+      },
+      "id": "aa6ec735-32d2-44bc-abfd-910e6bdb88da",
+      "name": "Prepare YouTube",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "actorId": {
+          "__rl": true,
+          "value": "YOUR_APIFY_ACTOR_X_ID",
+          "mode": "id"
+        },
+        "customBody": "={\n    \"maxItems\": 10,\n    \"searchTerms\": [\"{{ $json.handle }}\"],\n    \"sort\": \"Latest\"\n}",
+        "timeout": {}
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        304,
+        960
+      ],
+      "id": "cb82156b-e23b-4411-9365-38b04a68a44c",
+      "name": "Run X Actor",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "Datasets",
+        "datasetId": "={{ $json.defaultDatasetId }}",
+        "offset": {}
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        480,
+        960
+      ],
+      "id": "7da7b2e4-73b2-4153-848c-336ee4853e89",
+      "name": "Get X dataset",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $('Prepare concurrent data').first().json;\nconst handle = data.x_handle;\nconst brandName = data.brand_name;\nif (!handle) {\n  return [{ json: { source: 'x', brand: brandName, posts: [], message: 'No X handle configured' } }];\n}\nreturn [{ json: { handle, brand: brandName, source: 'x' } }];"
+      },
+      "id": "4e756ec9-fe4f-4fd7-98cc-b9f432bb5df1",
+      "name": "Prepare X",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_AIRTABLE_BASE_NAME",
+          "cachedResultUrl": "https://airtable.com/YOUR_AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "value": "YOUR_TABLE_VEILLE_HEBDO_ID",
+          "mode": "list",
+          "cachedResultName": "Veille Hebdo",
+          "cachedResultUrl": "https://airtable.com/YOUR_AIRTABLE_BASE_ID/YOUR_TABLE_VEILLE_HEBDO_ID"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Brand": "={{ $json.brand }}",
+            "Date": "={{ $('Aggregate competitor data').item.json.scan_date }}",
+            "Nouveau produit": "={{ $json.analysis.nouveaux_produits }}",
+            "Campagne marketing": "={{ $json.analysis.campagnes_marketing }}",
+            "Promotion": "={{ $json.analysis.promotions }}",
+            "Strategie contenu": "={{ $json.analysis.strategie_contenu }}",
+            "Tendance detectee": "={{ $json.analysis.tendances_detectees }}",
+            "Engagement notable": "={{ $json.analysis.engagement_notable }}",
+            "Partenariat": "={{ $json.analysis.partenariats }}",
+            "Canaux actifs": "={{ $json.analysis.canaux_actifs }}",
+            "Opportunite brand": "={{ $json.analysis.opportunites_brand }}",
+            "Resume": "={{ $json.analysis.resume_global }}",
+            "Statut": "A lire"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Brand",
+              "displayName": "Brand",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string"
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string"
+            },
+            {
+              "id": "Statut",
+              "displayName": "Statut",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "A lire",
+                  "value": "A lire"
+                },
+                {
+                  "name": "Lu",
+                  "value": "Lu"
+                },
+                {
+                  "name": "Action en cours",
+                  "value": "Action en cours"
+                }
+              ]
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        2064,
+        528
+      ],
+      "id": "ea2d03ad-1a52-47a9-be25-75ff62085585",
+      "name": "Save to Veille Hebdo"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst brandName = $('Prepare concurrent data').item.json.brand_name;\nconst results = [];\nfor (const item of items) {\n  const tweet = item.json;\n  results.push({\n    json: {\n      source: 'x', brand: brandName,\n      title: (tweet.text || tweet.fullText || '').substring(0, 200),\n      description: tweet.text || tweet.fullText || '',\n      url: tweet.url || '', date: tweet.createdAt || '',\n      views: tweet.viewCount || 0, likes: tweet.likeCount || 0,\n      comments: tweet.replyCount || 0, shares: tweet.retweetCount || 0,\n      engagement: (tweet.likeCount || 0) + (tweet.replyCount || 0) + (tweet.retweetCount || 0),\n      type: 'tweet'\n    }\n  });\n}\nif (results.length === 0) {\n  return [{ json: { source: 'x', brand: brandName, title: 'No recent tweets', description: '', url: '', date: '', views: 0, likes: 0, comments: 0, shares: 0, engagement: 0, type: '' } }];\n}\nreturn results;"
+      },
+      "id": "00a8cd98-0783-4491-985f-7af01d34f093",
+      "name": "Format X",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_AIRTABLE_BASE_NAME",
+          "cachedResultUrl": "https://airtable.com/YOUR_AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "value": "YOUR_TABLE_VEILLE_HEBDO_ID",
+          "mode": "list",
+          "cachedResultName": "Veille Hebdo",
+          "cachedResultUrl": "https://airtable.com/YOUR_AIRTABLE_BASE_ID/YOUR_TABLE_VEILLE_HEBDO_ID"
+        },
+        "returnAll": false,
+        "options": {
+          "fields": [
+            "Resume",
+            "Brand",
+            "Date"
+          ]
+        },
+        "sort": {
+          "property": [
+            {
+              "field": "Date",
+              "direction": "desc"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        928,
+        976
+      ],
+      "id": "c62610ff-b51d-4479-9424-cdb67f386452",
+      "name": "Search Veille records"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-20250514",
+          "mode": "list",
+          "cachedResultName": "claude-sonnet-4-20250514"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $('Get a document').item.json.content }}\n\nWeekly watch summaries:\n{{ JSON.stringify($('Consolidate weekly summaries').first().json.allBrands) }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 8000
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        1536,
+        976
+      ],
+      "id": "57c43cca-6376-4ece-bf1e-76f938dc2467",
+      "name": "LLM Analysis 2",
+      "credentials": {
+        "anthropicApi": {
+          "id": "YOUR_ANTHROPIC_CREDENTIAL_ID",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\nconst html = response.content[0].text.replace(/^```html\\n?/, '').replace(/\\n?```$/, '').trim();\n\nfunction extractSection(html, title) {\n  const regex = new RegExp('<h2>[^<]*' + title + '[^<]*</h2>([\\\\s\\\\S]*?)(?=<h2>|<div class=\"footer\")', 'i');\n  const match = html.match(regex);\n  if (!match) return '';\n  return match[1].replace(/<h3[^>]*>/g, '\\n### ').replace(/<\\/h3>/g, '\\n').replace(/<li[^>]*>/g, '• ').replace(/<\\/li>/g, '\\n').replace(/<br\\s*\\/?>/g, '\\n').replace(/<p[^>]*>/g, '\\n').replace(/<\\/p>/g, '\\n').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/\\n{3,}/g, '\\n\\n').trim();\n}\n\nreturn [{ json: { marche: extractSection(html, 'Market Trends'), strategies: extractSection(html, 'Competitor Actions'), opportunites: extractSection(html, 'Opportunities'), plan: extractSection(html, 'Conclusion'), synthese_html: html } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1856,
+        976
+      ],
+      "id": "49445c26-c340-436f-babc-9638f196b5c5",
+      "name": "Parse synthesis"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_AIRTABLE_BASE_NAME",
+          "cachedResultUrl": "https://airtable.com/YOUR_AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "value": "YOUR_TABLE_MARKET_INSIGHTS_ID",
+          "mode": "list",
+          "cachedResultName": "Market Insights",
+          "cachedResultUrl": "https://airtable.com/YOUR_AIRTABLE_BASE_ID/YOUR_TABLE_MARKET_INSIGHTS_ID"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) }}",
+            "Marche global": "={{ $json.marche }}",
+            "Strategies concurrents": "={{ $json.strategies }}",
+            "Opportunites": "={{ $json.opportunites }}",
+            "Plan action": "={{ $json.plan }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string"
+            },
+            {
+              "id": "Marche global",
+              "displayName": "Marche global",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string"
+            },
+            {
+              "id": "Strategies concurrents",
+              "displayName": "Strategies concurrents",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string"
+            },
+            {
+              "id": "Opportunites",
+              "displayName": "Opportunites",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string"
+            },
+            {
+              "id": "Plan action",
+              "displayName": "Plan action",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        2064,
+        1088
+      ],
+      "id": "023f478b-4056-4553-8b58-7884bdf8aeb8",
+      "name": "Save Market Insights"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "get",
+        "documentURL": "YOUR_GOOGLE_DOC_ID"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1328,
+        976
+      ],
+      "id": "e340ae1b-b294-4ec3-b6f8-26cfe46d8c35",
+      "name": "Get a document"
+    },
+    {
+      "parameters": {
+        "fromEmail": "your-email@yourdomain.com",
+        "toEmail": "your-email@yourdomain.com",
+        "subject": "=Weekly Competitive Intelligence Report — Week of {{ new Date().toLocaleDateString('fr-FR') }}",
+        "html": "={{ $json.synthese_html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2064,
+        864
+      ],
+      "id": "841ade81-9146-497b-9bde-37d48e2e2d52",
+      "name": "Send weekly report",
+      "webhookId": "YOUR_EMAIL_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst today = new Date().toISOString().split('T')[0];\nconst seen = new Set();\nconst result = [];\nfor (const item of items) {\n  const brand = item.json.Brand;\n  const date = item.json.Date;\n  if (date === today && !seen.has(brand)) {\n    seen.add(brand);\n    result.push({ brand, resume: item.json['Resume'], date });\n  }\n}\nreturn [{ json: { allBrands: result } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1136,
+        976
+      ],
+      "id": "e07c55ec-b616-4a03-8da0-778c0f095e4b",
+      "name": "Consolidate weekly summaries"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2272,
+        976
+      ],
+      "id": "8c0ca813-7216-4800-bfd1-61a2f43530f5",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "YOUR_AIRTABLE_BASE_ID",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Brands",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "38d668c4-744d-43a5-8cf6-5e86fbed78ca",
+      "name": "GET Brands Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -768,
+        480
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "YOUR_AIRTABLE_CREDENTIAL_ID",
+          "name": "Airtable OAuth"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Weekly Trigger": {
+      "main": [
+        [
+          {
+            "node": "GET Brands Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop par concurrent": {
+      "main": [
+        [
+          {
+            "node": "Search Veille records",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare concurrent data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare concurrent data": {
+      "main": [
+        [
+          {
+            "node": "Parallel branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parallel branches": {
+      "main": [
+        [
+          {
+            "node": "Prepare X",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prepare YouTube",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prepare TikTok",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prepare Facebook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prepare Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS exists?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GET Newsletters Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Feed Read": {
+      "main": [
+        [
+          {
+            "node": "Recent article?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS exists?": {
+      "main": [
+        [
+          {
+            "node": "RSS Feed Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter RSS 7 days": {
+      "main": [
+        [
+          {
+            "node": "Merge all sources",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Prepare Instagram": {
+      "main": [
+        [
+          {
+            "node": "Run Instagram Actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Instagram": {
+      "main": [
+        [
+          {
+            "node": "Merge all sources",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Prepare Facebook": {
+      "main": [
+        [
+          {
+            "node": "Run Facebook Actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Facebook": {
+      "main": [
+        [
+          {
+            "node": "Merge all sources",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Prepare TikTok": {
+      "main": [
+        [
+          {
+            "node": "Run TikTok Actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format TikTok": {
+      "main": [
+        [
+          {
+            "node": "Merge all sources",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "GET Newsletters Airtable": {
+      "main": [
+        [
+          {
+            "node": "Format Newsletters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Newsletters": {
+      "main": [
+        [
+          {
+            "node": "Merge all sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format YouTube": {
+      "main": [
+        [
+          {
+            "node": "Merge all sources",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Merge all sources": {
+      "main": [
+        [
+          {
+            "node": "Aggregate competitor data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate competitor data": {
+      "main": [
+        [
+          {
+            "node": "LLM Analysis 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Claude analysis": {
+      "main": [
+        [
+          {
+            "node": "Save to Veille Hebdo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait (rate limit)": {
+      "main": [
+        [
+          {
+            "node": "Loop par concurrent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM Analysis 1": {
+      "main": [
+        [
+          {
+            "node": "Parse Claude analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run YouTube Actor": {
+      "main": [
+        [
+          {
+            "node": "Get YouTube dataset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get YouTube dataset": {
+      "main": [
+        [
+          {
+            "node": "Format YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run TikTok Actor": {
+      "main": [
+        [
+          {
+            "node": "Get TikTok dataset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get TikTok dataset": {
+      "main": [
+        [
+          {
+            "node": "Format TikTok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Facebook Actor": {
+      "main": [
+        [
+          {
+            "node": "Get Facebook dataset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Facebook dataset": {
+      "main": [
+        [
+          {
+            "node": "Format Facebook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Instagram Actor": {
+      "main": [
+        [
+          {
+            "node": "Get Instagram dataset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Instagram dataset": {
+      "main": [
+        [
+          {
+            "node": "Format Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recent article?": {
+      "main": [
+        [
+          {
+            "node": "Filter RSS 7 days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare YouTube": {
+      "main": [
+        [
+          {
+            "node": "Run YouTube Actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run X Actor": {
+      "main": [
+        [
+          {
+            "node": "Get X dataset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get X dataset": {
+      "main": [
+        [
+          {
+            "node": "Format X",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare X": {
+      "main": [
+        [
+          {
+            "node": "Run X Actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Veille Hebdo": {
+      "main": [
+        [
+          {
+            "node": "Wait (rate limit)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Veille records": {
+      "main": [
+        [
+          {
+            "node": "Consolidate weekly summaries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM Analysis 2": {
+      "main": [
+        [
+          {
+            "node": "Parse synthesis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse synthesis": {
+      "main": [
+        [
+          {
+            "node": "Send weekly report",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save Market Insights",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Market Insights": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get a document": {
+      "main": [
+        [
+          {
+            "node": "LLM Analysis 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send weekly report": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consolidate weekly summaries": {
+      "main": [
+        [
+          {
+            "node": "Get a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format X": {
+      "main": [
+        [
+          {
+            "node": "Merge all sources",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "GET Brands Airtable": {
+      "main": [
+        [
+          {
+            "node": "Loop par concurrent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": "YOUR_INSTANCE_ID"
+  }
+}
