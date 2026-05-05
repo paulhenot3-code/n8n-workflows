@@ -1,0 +1,2695 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "crm",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3d2e73b2-c7b2-4f6c-9466-a9144b5494ab",
+      "name": "Webhook",
+      "webhookId": "YOUR_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "63aaf4fe-d9df-4b6a-b630-b7b7522bad9a",
+              "leftValue": "={{ $json.body.itemResponses[0].response }}",
+              "rightValue": "=Nouveau client",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        176,
+        0
+      ],
+      "id": "e4d41056-3c86-42d0-a498-70083507447c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_SPREADSHEET_NAME",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "NOUVEAU TABLEAU",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=YOUR_SHEET_GID"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "CLIENT": "={{ $json.body.itemResponses[1].response }}",
+            "TEL": "={{ $json.body.itemResponses[3].response }}",
+            "MAIL": "={{ $json.body.itemResponses[2].response }}",
+            "SERVICE": "={{ $json.body.itemResponses[4].response }}",
+            "MONTANT_CA": "={{ $json.body.itemResponses[5].response }}",
+            "DATE_1": "={{ $json.body.itemResponses[7].response }}",
+            "MOYEN_1": "={{ $json.body.itemResponses[8].response }}",
+            "ENCAISSE_1": "={{ $json.body.itemResponses[6].response }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "STATUT",
+              "displayName": "STATUT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CLIENT",
+              "displayName": "CLIENT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MONTANT_CA",
+              "displayName": "MONTANT_CA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_1",
+              "displayName": "ENCAISSE_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_1",
+              "displayName": "DATE_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_1",
+              "displayName": "MOYEN_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_2",
+              "displayName": "ENCAISSE_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_2",
+              "displayName": "DATE_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_2",
+              "displayName": "MOYEN_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_3",
+              "displayName": "ENCAISSE_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_3",
+              "displayName": "DATE_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_3",
+              "displayName": "MOYEN_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_4",
+              "displayName": "ENCAISSE_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_4",
+              "displayName": "DATE_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_4",
+              "displayName": "MOYEN_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Commentaires",
+              "displayName": "Commentaires",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MAIL",
+              "displayName": "MAIL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "TEL",
+              "displayName": "TEL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "SERVICE",
+              "displayName": "SERVICE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ZOHO_CONTACT_ID",
+              "displayName": "ZOHO_CONTACT_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        400,
+        -112
+      ],
+      "id": "bbe4f921-c2ac-4a02-af5d-05913c709bc5",
+      "name": "Creation ligne sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.zohoapis.eu/books/v3/contacts?organization_id=YOUR_ZOHO_ORG_ID",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contact_name\": \"{{ $json.CLIENT }}\",\n  \"company_name\": \"\",\n  \"billing_address\": {},\n  \"contact_persons\": [\n    {\n      \"first_name\": \"\",\n      \"last_name\": \"{{ $json.CLIENT }}\",\n      \"email\": \"{{ $json.MAIL }}\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        576,
+        -112
+      ],
+      "id": "9fc9e5f7-1f92-4ef7-86aa-c79d8f4ad8ad",
+      "name": "Create contact",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "YOUR_ZOHO_OAUTH_CREDENTIAL_ID",
+          "name": "Zoho OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_SPREADSHEET_NAME",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "NOUVEAU TABLEAU",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=YOUR_SHEET_GID"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "CLIENT": "={{ $('Creation ligne sheet').item.json.CLIENT }}",
+            "ZOHO_CONTACT_ID": "={{ $json.contact.contact_id }}"
+          },
+          "matchingColumns": [
+            "CLIENT"
+          ],
+          "schema": [
+            {
+              "id": "STATUT",
+              "displayName": "STATUT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CLIENT",
+              "displayName": "CLIENT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MONTANT_CA",
+              "displayName": "MONTANT_CA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_1",
+              "displayName": "ENCAISSE_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_1",
+              "displayName": "DATE_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_1",
+              "displayName": "MOYEN_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_2",
+              "displayName": "ENCAISSE_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_2",
+              "displayName": "DATE_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_2",
+              "displayName": "MOYEN_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_3",
+              "displayName": "ENCAISSE_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_3",
+              "displayName": "DATE_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_3",
+              "displayName": "MOYEN_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_4",
+              "displayName": "ENCAISSE_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_4",
+              "displayName": "DATE_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_4",
+              "displayName": "MOYEN_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Commentaires",
+              "displayName": "Commentaires",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MAIL",
+              "displayName": "MAIL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "TEL",
+              "displayName": "TEL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "SERVICE",
+              "displayName": "SERVICE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ZOHO_CONTACT_ID",
+              "displayName": "ZOHO_CONTACT_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        816,
+        -240
+      ],
+      "id": "9b864728-9e52-437a-a17f-cd070d2db1f8",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "06ffdb2f-6d2a-4e7c-ab2d-b186cd560703",
+              "name": "contact id",
+              "value": "={{ $json.contact.contact_id }}",
+              "type": "string"
+            },
+            {
+              "id": "28820a5d-12e0-4182-b8c6-206cad909141",
+              "name": "date",
+              "value": "={{ $('Creation ligne sheet').item.json.DATE_1 }}",
+              "type": "string"
+            },
+            {
+              "id": "68b55d3c-9662-45f3-a0a3-965394f6782a",
+              "name": "encaisse",
+              "value": "={{ $('Creation ligne sheet').item.json.ENCAISSE_1 }}",
+              "type": "string"
+            },
+            {
+              "id": "30d54c70-be42-4bff-a386-b7672b9805f1",
+              "name": "service",
+              "value": "={{ $('Creation ligne sheet').item.json.SERVICE }}",
+              "type": "string"
+            },
+            {
+              "id": "890b376b-a85c-4ac5-b6d8-0c4cbf576265",
+              "name": "Quantite",
+              "value": "1",
+              "type": "string"
+            },
+            {
+              "id": "292ba4dc-96f5-46a3-b09d-8eee27e89345",
+              "name": "moyen",
+              "value": "={{ $('Creation ligne sheet').item.json.MOYEN_1 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        752,
+        -112
+      ],
+      "id": "5ba96333-e9e1-46ee-bafe-0914e07b3d49",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        928,
+        -112
+      ],
+      "id": "3b3be925-68ce-47f7-85b0-a01406fb44e7",
+      "name": "Wait",
+      "webhookId": "YOUR_WAIT_WEBHOOK_ID_1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.zohoapis.eu/books/v3/invoices?organization_id=YOUR_ZOHO_ORG_ID",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"customer_id\": \"{{ $json['contact id'] }}\",\n  \"date\": \"{{ $json['date'] }}\",\n  \"line_items\": [\n    {\n      \"item_name\": \"{{ $json['service'] }}\",\n      \"description\": \"{{ $json.service }}\",\n      \"quantity\": {{ $json['Quantite'] }},\n      \"rate\": {{ $json['encaisse'] }}\n    }\n  ],\n  \"notes\": \"The payment for this invoice has been collected via {{ $json.moyen }} acting as a payment collection intermediary.\\nFunds are collected on behalf of YOUR_COMPANY_NAME,\\na company registered under YOUR_COMPANY_ADDRESS (Business License No. YOUR_LICENSE_NUMBER).\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1104,
+        -112
+      ],
+      "id": "61daf9e2-2a94-403c-baf9-7fb820e0dbd3",
+      "name": "HTTP Request",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "YOUR_ZOHO_OAUTH_CREDENTIAL_ID",
+          "name": "Zoho OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bcac59b7-2b2c-49d8-bbca-b95582aa2831",
+              "name": "invoice.invoice_id",
+              "value": "={{ $json.invoice.invoice_id }}",
+              "type": "string"
+            },
+            {
+              "id": "fc73670b-2512-4f02-b354-5d680134b388",
+              "name": "invoice.invoice_number",
+              "value": "={{ $json.invoice.invoice_number }}",
+              "type": "string"
+            },
+            {
+              "id": "b294c02c-9c41-446c-8adf-6dd86aa197d7",
+              "name": "customer_name",
+              "value": "={{ $json.invoice.customer_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        -112
+      ],
+      "id": "5da40157-9a6b-437d-9afe-c933aa9fd928",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.zohoapis.eu/books/v3/invoices/pdf?organization_id=YOUR_ZOHO_ORG_ID&invoice_ids={{ $json.invoice.invoice_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1424,
+        -112
+      ],
+      "id": "10c70fb5-f072-4e4d-923a-c287d514b6f5",
+      "name": "HTTP Request2",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "YOUR_ZOHO_OAUTH_CREDENTIAL_ID",
+          "name": "Zoho OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.invoice.invoice_number }} - {{ $json.customer_name }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "YOUR_DRIVE_FOLDER_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_DRIVE_FOLDER_NAME",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/YOUR_DRIVE_FOLDER_ID"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1584,
+        -112
+      ],
+      "id": "1059b33f-b88d-45a5-8148-2a50020f71ec",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GDRIVE_CREDENTIAL_ID",
+          "name": "your-email@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Google Form webhook for existing client payment\nconst out = [];\nfor (const item of $input.all()) {\n  const body = item.json.body || {};\n  const ir = body.itemResponses || [];\n  const getByTitle = (startsWith) => { const found = ir.find(r => r.title.startsWith(startsWith)); return (found?.response || '').toString().trim(); };\n  const client = getByTitle('CLIENT EXISTANTS');\n  let encaissementIndex = null;\n  if (getByTitle('Encaissement 2')) { encaissementIndex = 2; }\n  else if (getByTitle('Encaissement 3')) { encaissementIndex = 3; }\n  else if (getByTitle('Encaissement 4')) { encaissementIndex = 4; }\n  let encaissement = '', date = '', moyen = '';\n  if (encaissementIndex !== null) {\n    encaissement = getByTitle(`Encaissement ${encaissementIndex}`);\n    date = getByTitle(`DATE ${encaissementIndex}`);\n    moyen = getByTitle('Moyen ');\n  }\n  out.push({ json: { client, encaissement, date, moyen_paiement: moyen, encaissement_index: encaissementIndex } });\n}\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        368,
+        288
+      ],
+      "id": "d9f4f722-c3ea-485f-a39b-be74e2bd4c9f",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.encaissement_index }}",
+                    "rightValue": 2,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "614b96a7-3988-4fd5-a9f9-a4b16231632e"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Encaiss 2"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1edd3b46-7d7c-4217-b0cb-986a60924897",
+                    "leftValue": "={{ $json.encaissement_index }}",
+                    "rightValue": 3,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Encaiss 3"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8a921475-1760-4503-9404-74c59f30ac9d",
+                    "leftValue": "={{ $json.encaissement_index }}",
+                    "rightValue": 4,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Encaiss 4"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        528,
+        272
+      ],
+      "id": "db058946-bc07-4382-a254-37964d8360fd",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_SPREADSHEET_NAME",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "NOUVEAU TABLEAU",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=YOUR_SHEET_GID"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "CLIENT": "={{ $json.client }}",
+            "ENCAISSE_2": "={{ $json.encaissement }}",
+            "DATE_2": "={{ $json.date }}",
+            "MOYEN_2": "={{ $json.moyen_paiement }}"
+          },
+          "matchingColumns": [
+            "CLIENT"
+          ],
+          "schema": [
+            {
+              "id": "STATUT",
+              "displayName": "STATUT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CLIENT",
+              "displayName": "CLIENT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MONTANT_CA",
+              "displayName": "MONTANT_CA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_1",
+              "displayName": "ENCAISSE_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_1",
+              "displayName": "DATE_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_1",
+              "displayName": "MOYEN_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_2",
+              "displayName": "ENCAISSE_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_2",
+              "displayName": "DATE_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_2",
+              "displayName": "MOYEN_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_3",
+              "displayName": "ENCAISSE_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_3",
+              "displayName": "DATE_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_3",
+              "displayName": "MOYEN_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_4",
+              "displayName": "ENCAISSE_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_4",
+              "displayName": "DATE_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_4",
+              "displayName": "MOYEN_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Commentaires",
+              "displayName": "Commentaires",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MAIL",
+              "displayName": "MAIL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "TEL",
+              "displayName": "TEL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "SERVICE",
+              "displayName": "SERVICE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ZOHO_CONTACT_ID",
+              "displayName": "ZOHO_CONTACT_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        736,
+        96
+      ],
+      "id": "8b5d6fa1-d482-4e15-bbd6-8bb310ca07ab",
+      "name": "Remplir ligne existante",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_SPREADSHEET_NAME",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "NOUVEAU TABLEAU",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=YOUR_SHEET_GID"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "CLIENT",
+              "lookupValue": "={{ $json.CLIENT }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        912,
+        96
+      ],
+      "id": "8b1c73e4-1870-43e2-acae-4a9ca56d719d",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compatible 100% n8n\n// Find the last non-empty payment (2,3,4) and convert date to ISO for Zoho\n// Handles: \"DD/MM/YY\", \"DD/MM/YYYY\", \"DD-MM-YYYY\", \"YYYY-MM-DD\"\n\nconst items = $input.all();\n\nreturn items.map(item => {\n  const d = item.json;\n  const indices = [4, 3, 2];\n  let foundIndex = null;\n\n  for (const i of indices) {\n    const encaKeyTest = `ENCAISSE_${i}`;\n    if (d[encaKeyTest] !== undefined && d[encaKeyTest] !== null && d[encaKeyTest] !== \\'\\') {\n      foundIndex = i;\n      break;\n    }\n  }\n\n  if (foundIndex === null) {\n    return { json: { CLIENT: d.CLIENT, LAST_ENCAISSE: null, LAST_DATE: null, LAST_DATE_ISO: null, LAST_MOYEN: null, LAST_INDEX: null, SERVICE: d.SERVICE, ZOHO_CONTACT_ID: d.ZOHO_CONTACT_ID } };\n  }\n\n  const encaKey = `ENCAISSE_${foundIndex}`;\n  const dateKey = `DATE_${foundIndex}`;\n  const moyenKey = `MOYEN_${foundIndex}`;\n  let dateISO = null;\n  const rawDate = (d[dateKey] || \\'\\').toString().trim();\n\n  if (rawDate) {\n    if (rawDate.includes(\\'/\\')) {\n      const [jour, mois, an] = rawDate.split(\\'/\\');\n      const year = an && an.length === 2 ? `20${an}` : an;\n      dateISO = `${year}-${mois.padStart(2, \\'0\\')}-${jour.padStart(2, \\'0\\')}`;\n    } else if (rawDate.includes(\\'-\\')) {\n      const parts = rawDate.split(\\'-\\');\n      if (parts[0].length === 4) { dateISO = rawDate; }\n      else if (parts[2].length === 4) { const [jour, mois, year] = parts; dateISO = `${year}-${mois.padStart(2, \\'0\\')}-${jour.padStart(2, \\'0\\')}` ; }\n    } else {\n      const dObj = new Date(rawDate);\n      if (!isNaN(dObj.getTime())) { const y = dObj.getFullYear(); const m = String(dObj.getMonth() + 1).padStart(2, \\'0\\'); const j = String(dObj.getDate()).padStart(2, \\'0\\'); dateISO = `${y}-${m}-${j}`; }\n    }\n  }\n\n  return { json: { CLIENT: d.CLIENT, LAST_ENCAISSE: d[encaKey], LAST_DATE: rawDate, LAST_DATE_ISO: dateISO, LAST_MOYEN: d[moyenKey], LAST_INDEX: foundIndex, SERVICE: d.SERVICE, ZOHO_CONTACT_ID: d.ZOHO_CONTACT_ID } };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        96
+      ],
+      "id": "92b1f7fc-a0e3-4749-9630-ea4c805ee1c0",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "06ffdb2f-6d2a-4e7c-ab2d-b186cd560703",
+              "name": "contact id",
+              "value": "={{ $json.ZOHO_CONTACT_ID }}",
+              "type": "string"
+            },
+            {
+              "id": "28820a5d-12e0-4182-b8c6-206cad909141",
+              "name": "date",
+              "value": "={{ $json.LAST_DATE_ISO }}",
+              "type": "string"
+            },
+            {
+              "id": "68b55d3c-9662-45f3-a0a3-965394f6782a",
+              "name": "encaisse",
+              "value": "={{ $json.LAST_ENCAISSE }}",
+              "type": "string"
+            },
+            {
+              "id": "30d54c70-be42-4bff-a386-b7672b9805f1",
+              "name": "service",
+              "value": "={{ $json.SERVICE }}",
+              "type": "string"
+            },
+            {
+              "id": "890b376b-a85c-4ac5-b6d8-0c4cbf576265",
+              "name": "quantite",
+              "value": "1",
+              "type": "string"
+            },
+            {
+              "id": "292ba4dc-96f5-46a3-b09d-8eee27e89345",
+              "name": "moyen",
+              "value": "={{ $json.LAST_MOYEN }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        96
+      ],
+      "id": "5829e65c-9655-44c3-b2dd-fc6fe33fb073",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1440,
+        96
+      ],
+      "id": "83ea1af8-b2b3-4882-b9d1-9089f0f61d8f",
+      "name": "Wait1",
+      "webhookId": "YOUR_WAIT_WEBHOOK_ID_2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.zohoapis.eu/books/v3/invoices?organization_id=YOUR_ZOHO_ORG_ID",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"customer_id\": \"{{ $json['contact id'] }}\",\n  \"date\": \"{{ $json['date'] }}\",\n  \"line_items\": [\n    {\n      \"item_name\": \"{{ $json['service'] }}\",\n      \"description\": \"{{ $json.service }}\",\n      \"quantity\": {{ $json.quantite }},\n      \"rate\": {{ $json['encaisse'] }}\n    }\n  ],\n  \"notes\": \"The payment for this invoice has been collected via {{ $json.moyen }} acting as a payment collection intermediary.\\nFunds are collected on behalf of YOUR_COMPANY_NAME,\\na company registered under YOUR_COMPANY_ADDRESS (Business License No. YOUR_LICENSE_NUMBER).\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1600,
+        96
+      ],
+      "id": "ead694da-0993-42d0-9a17-e36f4b924957",
+      "name": "HTTP Request1",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "YOUR_ZOHO_OAUTH_CREDENTIAL_ID",
+          "name": "Zoho OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bcac59b7-2b2c-49d8-bbca-b95582aa2831",
+              "name": "invoice.invoice_id",
+              "value": "={{ $json.invoice.invoice_id }}",
+              "type": "string"
+            },
+            {
+              "id": "fc73670b-2512-4f02-b354-5d680134b388",
+              "name": "invoice.invoice_number",
+              "value": "={{ $json.invoice.invoice_number }}",
+              "type": "string"
+            },
+            {
+              "id": "b294c02c-9c41-446c-8adf-6dd86aa197d7",
+              "name": "customer_name",
+              "value": "={{ $json.invoice.customer_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        96
+      ],
+      "id": "a44d08ed-5e5d-4efd-828d-8b5d4e548da8",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.zohoapis.eu/books/v3/invoices/pdf?organization_id=YOUR_ZOHO_ORG_ID&invoice_ids={{ $json.invoice.invoice_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        96
+      ],
+      "id": "141007cb-2633-492b-b217-ad9198af36b8",
+      "name": "HTTP Request3",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "YOUR_ZOHO_OAUTH_CREDENTIAL_ID",
+          "name": "Zoho OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.invoice.invoice_number }} - {{ $json.customer_name }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "YOUR_DRIVE_FOLDER_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_DRIVE_FOLDER_NAME",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/YOUR_DRIVE_FOLDER_ID"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2096,
+        96
+      ],
+      "id": "51ec1469-0568-4470-8e93-38b57dd05584",
+      "name": "Upload file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GDRIVE_CREDENTIAL_ID",
+          "name": "your-email@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_SPREADSHEET_NAME",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "NOUVEAU TABLEAU",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=YOUR_SHEET_GID"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "CLIENT": "={{ $json.client }}",
+            "ENCAISSE_3": "={{ $json.encaissement }}",
+            "DATE_3": "={{ $json.date }}",
+            "MOYEN_3": "={{ $json.moyen_paiement }}"
+          },
+          "matchingColumns": [
+            "CLIENT"
+          ],
+          "schema": [
+            {
+              "id": "STATUT",
+              "displayName": "STATUT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CLIENT",
+              "displayName": "CLIENT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MONTANT_CA",
+              "displayName": "MONTANT_CA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_1",
+              "displayName": "ENCAISSE_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_1",
+              "displayName": "DATE_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_1",
+              "displayName": "MOYEN_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_2",
+              "displayName": "ENCAISSE_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_2",
+              "displayName": "DATE_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_2",
+              "displayName": "MOYEN_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_3",
+              "displayName": "ENCAISSE_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_3",
+              "displayName": "DATE_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_3",
+              "displayName": "MOYEN_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_4",
+              "displayName": "ENCAISSE_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_4",
+              "displayName": "DATE_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_4",
+              "displayName": "MOYEN_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Commentaires",
+              "displayName": "Commentaires",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MAIL",
+              "displayName": "MAIL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "TEL",
+              "displayName": "TEL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "SERVICE",
+              "displayName": "SERVICE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ZOHO_CONTACT_ID",
+              "displayName": "ZOHO_CONTACT_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        736,
+        288
+      ],
+      "id": "d7e0c7c8-d7d3-4964-9480-54e51fb1125e",
+      "name": "Remplir ligne existante1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_SPREADSHEET_NAME",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "NOUVEAU TABLEAU",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=YOUR_SHEET_GID"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "CLIENT",
+              "lookupValue": "={{ $json.CLIENT }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        912,
+        288
+      ],
+      "id": "9e942799-bd7e-42b9-9230-604d0d8d7df7",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compatible 100% n8n\n// Find the last non-empty payment (2,3,4) and convert date to ISO for Zoho\n// Handles: \"DD/MM/YY\", \"DD/MM/YYYY\", \"DD-MM-YYYY\", \"YYYY-MM-DD\"\n\nconst items = $input.all();\n\nreturn items.map(item => {\n  const d = item.json;\n  const indices = [4, 3, 2];\n  let foundIndex = null;\n\n  for (const i of indices) {\n    const encaKeyTest = `ENCAISSE_${i}`;\n    if (d[encaKeyTest] !== undefined && d[encaKeyTest] !== null && d[encaKeyTest] !== \\'\\') {\n      foundIndex = i;\n      break;\n    }\n  }\n\n  if (foundIndex === null) {\n    return { json: { CLIENT: d.CLIENT, LAST_ENCAISSE: null, LAST_DATE: null, LAST_DATE_ISO: null, LAST_MOYEN: null, LAST_INDEX: null, SERVICE: d.SERVICE, ZOHO_CONTACT_ID: d.ZOHO_CONTACT_ID } };\n  }\n\n  const encaKey = `ENCAISSE_${foundIndex}`;\n  const dateKey = `DATE_${foundIndex}`;\n  const moyenKey = `MOYEN_${foundIndex}`;\n  let dateISO = null;\n  const rawDate = (d[dateKey] || \\'\\').toString().trim();\n\n  if (rawDate) {\n    if (rawDate.includes(\\'/\\')) {\n      const [jour, mois, an] = rawDate.split(\\'/\\');\n      const year = an && an.length === 2 ? `20${an}` : an;\n      dateISO = `${year}-${mois.padStart(2, \\'0\\')}-${jour.padStart(2, \\'0\\')}`;\n    } else if (rawDate.includes(\\'-\\')) {\n      const parts = rawDate.split(\\'-\\');\n      if (parts[0].length === 4) { dateISO = rawDate; }\n      else if (parts[2].length === 4) { const [jour, mois, year] = parts; dateISO = `${year}-${mois.padStart(2, \\'0\\')}-${jour.padStart(2, \\'0\\')}` ; }\n    } else {\n      const dObj = new Date(rawDate);\n      if (!isNaN(dObj.getTime())) { const y = dObj.getFullYear(); const m = String(dObj.getMonth() + 1).padStart(2, \\'0\\'); const j = String(dObj.getDate()).padStart(2, \\'0\\'); dateISO = `${y}-${m}-${j}`; }\n    }\n  }\n\n  return { json: { CLIENT: d.CLIENT, LAST_ENCAISSE: d[encaKey], LAST_DATE: rawDate, LAST_DATE_ISO: dateISO, LAST_MOYEN: d[moyenKey], LAST_INDEX: foundIndex, SERVICE: d.SERVICE, ZOHO_CONTACT_ID: d.ZOHO_CONTACT_ID } };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        288
+      ],
+      "id": "2d68ab70-b023-41c6-aec3-166fba2d2ba8",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "06ffdb2f-6d2a-4e7c-ab2d-b186cd560703",
+              "name": "contact id",
+              "value": "={{ $json.ZOHO_CONTACT_ID }}",
+              "type": "string"
+            },
+            {
+              "id": "28820a5d-12e0-4182-b8c6-206cad909141",
+              "name": "date",
+              "value": "={{ $json.LAST_DATE_ISO }}",
+              "type": "string"
+            },
+            {
+              "id": "68b55d3c-9662-45f3-a0a3-965394f6782a",
+              "name": "encaisse",
+              "value": "={{ $json.LAST_ENCAISSE }}",
+              "type": "string"
+            },
+            {
+              "id": "30d54c70-be42-4bff-a386-b7672b9805f1",
+              "name": "service",
+              "value": "={{ $json.SERVICE }}",
+              "type": "string"
+            },
+            {
+              "id": "890b376b-a85c-4ac5-b6d8-0c4cbf576265",
+              "name": "quantite",
+              "value": "1",
+              "type": "string"
+            },
+            {
+              "id": "292ba4dc-96f5-46a3-b09d-8eee27e89345",
+              "name": "moyen",
+              "value": "={{ $json.LAST_MOYEN }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        288
+      ],
+      "id": "958b9c56-5b7a-461f-ab4c-ef04d8c10147",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1440,
+        288
+      ],
+      "id": "d3ca4152-740e-41f6-ba35-b9a240f89c92",
+      "name": "Wait2",
+      "webhookId": "YOUR_WAIT_WEBHOOK_ID_2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.zohoapis.eu/books/v3/invoices?organization_id=YOUR_ZOHO_ORG_ID",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"customer_id\": \"{{ $json['contact id'] }}\",\n  \"date\": \"{{ $json['date'] }}\",\n  \"line_items\": [\n    {\n      \"item_name\": \"{{ $json['service'] }}\",\n      \"description\": \"{{ $json.service }}\",\n      \"quantity\": {{ $json.quantite }},\n      \"rate\": {{ $json['encaisse'] }}\n    }\n  ],\n  \"notes\": \"The payment for this invoice has been collected via {{ $json.moyen }} acting as a payment collection intermediary.\\nFunds are collected on behalf of YOUR_COMPANY_NAME,\\na company registered under YOUR_COMPANY_ADDRESS (Business License No. YOUR_LICENSE_NUMBER).\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1600,
+        288
+      ],
+      "id": "f4b9b937-a479-4e01-b60a-6385cb66b75d",
+      "name": "HTTP Request4",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "YOUR_ZOHO_OAUTH_CREDENTIAL_ID",
+          "name": "Zoho OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bcac59b7-2b2c-49d8-bbca-b95582aa2831",
+              "name": "invoice.invoice_id",
+              "value": "={{ $json.invoice.invoice_id }}",
+              "type": "string"
+            },
+            {
+              "id": "fc73670b-2512-4f02-b354-5d680134b388",
+              "name": "invoice.invoice_number",
+              "value": "={{ $json.invoice.invoice_number }}",
+              "type": "string"
+            },
+            {
+              "id": "b294c02c-9c41-446c-8adf-6dd86aa197d7",
+              "name": "customer_name",
+              "value": "={{ $json.invoice.customer_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        288
+      ],
+      "id": "b4039f5c-e4e1-4b90-a0b9-ad6bf60fd2b6",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.zohoapis.eu/books/v3/invoices/pdf?organization_id=YOUR_ZOHO_ORG_ID&invoice_ids={{ $json.invoice.invoice_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        288
+      ],
+      "id": "bcfadff1-4b7a-4c30-9d07-1adf0e307ec1",
+      "name": "HTTP Request5",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "YOUR_ZOHO_OAUTH_CREDENTIAL_ID",
+          "name": "Zoho OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.invoice.invoice_number }} - {{ $json.customer_name }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "YOUR_DRIVE_FOLDER_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_DRIVE_FOLDER_NAME",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/YOUR_DRIVE_FOLDER_ID"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2096,
+        288
+      ],
+      "id": "c7161fba-061f-494d-a876-92161780f26d",
+      "name": "Upload file2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GDRIVE_CREDENTIAL_ID",
+          "name": "your-email@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_SPREADSHEET_NAME",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "NOUVEAU TABLEAU",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=YOUR_SHEET_GID"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "CLIENT": "={{ $json.client }}",
+            "ENCAISSE_4": "={{ $json.encaissement }}",
+            "DATE_4": "={{ $json.date }}",
+            "MOYEN_4": "={{ $json.moyen_paiement }}"
+          },
+          "matchingColumns": [
+            "CLIENT"
+          ],
+          "schema": [
+            {
+              "id": "STATUT",
+              "displayName": "STATUT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CLIENT",
+              "displayName": "CLIENT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MONTANT_CA",
+              "displayName": "MONTANT_CA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_1",
+              "displayName": "ENCAISSE_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_1",
+              "displayName": "DATE_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_1",
+              "displayName": "MOYEN_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_2",
+              "displayName": "ENCAISSE_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_2",
+              "displayName": "DATE_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_2",
+              "displayName": "MOYEN_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_3",
+              "displayName": "ENCAISSE_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_3",
+              "displayName": "DATE_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_3",
+              "displayName": "MOYEN_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ENCAISSE_4",
+              "displayName": "ENCAISSE_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATE_4",
+              "displayName": "DATE_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MOYEN_4",
+              "displayName": "MOYEN_4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Commentaires",
+              "displayName": "Commentaires",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MAIL",
+              "displayName": "MAIL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "TEL",
+              "displayName": "TEL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "SERVICE",
+              "displayName": "SERVICE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ZOHO_CONTACT_ID",
+              "displayName": "ZOHO_CONTACT_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        736,
+        496
+      ],
+      "id": "c582ba68-f01c-43f9-ba00-0ec3edabe2d3",
+      "name": "Remplir ligne existante2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_SPREADSHEET_NAME",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "NOUVEAU TABLEAU",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=YOUR_SHEET_GID"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "CLIENT",
+              "lookupValue": "={{ $json.CLIENT }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        912,
+        496
+      ],
+      "id": "5de423dd-df2f-429b-83e1-275e5751c811",
+      "name": "Get row(s) in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GSHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compatible 100% n8n\n// Find the last non-empty payment (2,3,4) and convert date to ISO for Zoho\n// Handles: \"DD/MM/YY\", \"DD/MM/YYYY\", \"DD-MM-YYYY\", \"YYYY-MM-DD\"\n\nconst items = $input.all();\n\nreturn items.map(item => {\n  const d = item.json;\n  const indices = [4, 3, 2];\n  let foundIndex = null;\n\n  for (const i of indices) {\n    const encaKeyTest = `ENCAISSE_${i}`;\n    if (d[encaKeyTest] !== undefined && d[encaKeyTest] !== null && d[encaKeyTest] !== \\'\\') {\n      foundIndex = i;\n      break;\n    }\n  }\n\n  if (foundIndex === null) {\n    return { json: { CLIENT: d.CLIENT, LAST_ENCAISSE: null, LAST_DATE: null, LAST_DATE_ISO: null, LAST_MOYEN: null, LAST_INDEX: null, SERVICE: d.SERVICE, ZOHO_CONTACT_ID: d.ZOHO_CONTACT_ID } };\n  }\n\n  const encaKey = `ENCAISSE_${foundIndex}`;\n  const dateKey = `DATE_${foundIndex}`;\n  const moyenKey = `MOYEN_${foundIndex}`;\n  let dateISO = null;\n  const rawDate = (d[dateKey] || \\'\\').toString().trim();\n\n  if (rawDate) {\n    if (rawDate.includes(\\'/\\')) {\n      const [jour, mois, an] = rawDate.split(\\'/\\');\n      const year = an && an.length === 2 ? `20${an}` : an;\n      dateISO = `${year}-${mois.padStart(2, \\'0\\')}-${jour.padStart(2, \\'0\\')}`;\n    } else if (rawDate.includes(\\'-\\')) {\n      const parts = rawDate.split(\\'-\\');\n      if (parts[0].length === 4) { dateISO = rawDate; }\n      else if (parts[2].length === 4) { const [jour, mois, year] = parts; dateISO = `${year}-${mois.padStart(2, \\'0\\')}-${jour.padStart(2, \\'0\\')}` ; }\n    } else {\n      const dObj = new Date(rawDate);\n      if (!isNaN(dObj.getTime())) { const y = dObj.getFullYear(); const m = String(dObj.getMonth() + 1).padStart(2, \\'0\\'); const j = String(dObj.getDate()).padStart(2, \\'0\\'); dateISO = `${y}-${m}-${j}`; }\n    }\n  }\n\n  return { json: { CLIENT: d.CLIENT, LAST_ENCAISSE: d[encaKey], LAST_DATE: rawDate, LAST_DATE_ISO: dateISO, LAST_MOYEN: d[moyenKey], LAST_INDEX: foundIndex, SERVICE: d.SERVICE, ZOHO_CONTACT_ID: d.ZOHO_CONTACT_ID } };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        496
+      ],
+      "id": "967a9139-52a9-48ea-ad15-007f524746fb",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "06ffdb2f-6d2a-4e7c-ab2d-b186cd560703",
+              "name": "contact id",
+              "value": "={{ $json.ZOHO_CONTACT_ID }}",
+              "type": "string"
+            },
+            {
+              "id": "28820a5d-12e0-4182-b8c6-206cad909141",
+              "name": "date",
+              "value": "={{ $json.LAST_DATE_ISO }}",
+              "type": "string"
+            },
+            {
+              "id": "68b55d3c-9662-45f3-a0a3-965394f6782a",
+              "name": "encaisse",
+              "value": "={{ $json.LAST_ENCAISSE }}",
+              "type": "string"
+            },
+            {
+              "id": "30d54c70-be42-4bff-a386-b7672b9805f1",
+              "name": "service",
+              "value": "={{ $json.SERVICE }}",
+              "type": "string"
+            },
+            {
+              "id": "890b376b-a85c-4ac5-b6d8-0c4cbf576265",
+              "name": "quantite",
+              "value": "1",
+              "type": "string"
+            },
+            {
+              "id": "292ba4dc-96f5-46a3-b09d-8eee27e89345",
+              "name": "moyen",
+              "value": "={{ $json.LAST_MOYEN }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        496
+      ],
+      "id": "222a96ee-f687-4f9d-8ad3-419ecbf58b66",
+      "name": "Edit Fields7"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1440,
+        496
+      ],
+      "id": "dcc5316e-c61f-4e2c-b59f-ba61c844fa9c",
+      "name": "Wait3",
+      "webhookId": "YOUR_WAIT_WEBHOOK_ID_2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.zohoapis.eu/books/v3/invoices?organization_id=YOUR_ZOHO_ORG_ID",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"customer_id\": \"{{ $json['contact id'] }}\",\n  \"date\": \"{{ $json['date'] }}\",\n  \"line_items\": [\n    {\n      \"item_name\": \"{{ $json['service'] }}\",\n      \"description\": \"{{ $json.service }}\",\n      \"quantity\": {{ $json.quantite }},\n      \"rate\": {{ $json['encaisse'] }}\n    }\n  ],\n  \"notes\": \"The payment for this invoice has been collected via {{ $json.moyen }} acting as a payment collection intermediary.\\nFunds are collected on behalf of YOUR_COMPANY_NAME,\\na company registered under YOUR_COMPANY_ADDRESS (Business License No. YOUR_LICENSE_NUMBER).\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1600,
+        496
+      ],
+      "id": "19fe4eb5-5a39-400d-abc5-50fac8864c04",
+      "name": "HTTP Request6",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "YOUR_ZOHO_OAUTH_CREDENTIAL_ID",
+          "name": "Zoho OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bcac59b7-2b2c-49d8-bbca-b95582aa2831",
+              "name": "invoice.invoice_id",
+              "value": "={{ $json.invoice.invoice_id }}",
+              "type": "string"
+            },
+            {
+              "id": "fc73670b-2512-4f02-b354-5d680134b388",
+              "name": "invoice.invoice_number",
+              "value": "={{ $json.invoice.invoice_number }}",
+              "type": "string"
+            },
+            {
+              "id": "b294c02c-9c41-446c-8adf-6dd86aa197d7",
+              "name": "customer_name",
+              "value": "={{ $json.invoice.customer_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        496
+      ],
+      "id": "50097844-fffb-4c1b-8be4-98c864d714da",
+      "name": "Edit Fields8"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.zohoapis.eu/books/v3/invoices/pdf?organization_id=YOUR_ZOHO_ORG_ID&invoice_ids={{ $json.invoice.invoice_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        496
+      ],
+      "id": "4edda116-9858-4d48-856b-3a5454cdec7f",
+      "name": "HTTP Request7",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "YOUR_ZOHO_OAUTH_CREDENTIAL_ID",
+          "name": "Zoho OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.invoice.invoice_number }} - {{ $json.customer_name }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "YOUR_DRIVE_FOLDER_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_DRIVE_FOLDER_NAME",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/YOUR_DRIVE_FOLDER_ID"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2096,
+        496
+      ],
+      "id": "8b338795-cc47-498f-8e2f-6ab89777835a",
+      "name": "Upload file3",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GDRIVE_CREDENTIAL_ID",
+          "name": "your-email@gmail.com"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Creation ligne sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creation ligne sheet": {
+      "main": [
+        [
+          {
+            "node": "Create contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create contact": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Remplir ligne existante",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Remplir ligne existante1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Remplir ligne existante2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remplir ligne existante": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "Upload file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remplir ligne existante1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request5": {
+      "main": [
+        [
+          {
+            "node": "Upload file2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remplir ligne existante2": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request6": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields8": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request7": {
+      "main": [
+        [
+          {
+            "node": "Upload file3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_INSTANCE_ID"
+  }
+}
